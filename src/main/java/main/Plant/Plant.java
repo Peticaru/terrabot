@@ -36,6 +36,18 @@ public class Plant extends Entity {
             }
         }
     }
+
+    public double getBlockingProbability() {
+        switch (type) {
+            case "FloweringPlants": return 90.0;
+            case "Gymnosperms": return 60.0;
+            case "Ferns": return 30.0;
+            case "Mosses": return 40.0;
+            case "Algae": return 20.0;
+            default: return 0.0;
+        }
+    }
+    
     private void advanceAge() {
         if (age == Age.Young) {
             age = Age.Mature;
