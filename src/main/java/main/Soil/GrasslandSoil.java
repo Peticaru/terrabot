@@ -9,7 +9,7 @@ public class GrasslandSoil extends Soil {
     }
 
     @Override
-    public double calcScore() {
+    public double getQuality() {
         double score = (nitrogen * 1.3) + (organicMatter * 1.5) + (rootDensity * 0.8);
         score = norm(score);
         score = round(score);

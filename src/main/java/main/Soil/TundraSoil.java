@@ -9,7 +9,7 @@ public class TundraSoil extends Soil{
     }
 
     @Override
-    public double calcScore() {
+    public double getQuality() {
         double score = (nitrogen * 0.7) + (organicMatter * 0.5) - (permafrostDepth * 1.5);
         score = norm(score);
         score = round(score);

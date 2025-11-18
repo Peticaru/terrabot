@@ -10,7 +10,7 @@ public class ForrestSoil extends Soil {
     }
 
     @Override
-    public double calcScore() {
+    public double getQuality() {
         double score = 1.2 * nitrogen + organicMatter * 2 + waterRetention * 1.5 + leafLitter * 0.3;
         score = norm(score);
         score = round(score);

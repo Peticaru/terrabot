@@ -9,7 +9,7 @@ public class SwampSoil extends Soil{
     }
 
     @Override
-    public double calcScore() {
+    public double getQuality() {
         double score = 	(nitrogen * 1.1) + (organicMatter * 2.2) - (waterLogging * 5);
         score = norm(score);
         score = round(score);

@@ -9,7 +9,7 @@ public class DesertSoil extends Soil{
     }
 
     @Override
-    public double calcScore() {
+    public double getQuality() {
         double score = (nitrogen * 0.5) + (waterRetention * 0.3) - (salinity * 2);
         score = norm(score);
         score = round(score);
