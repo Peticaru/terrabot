@@ -18,6 +18,9 @@ abstract class Air extends Entity {
         this.oxygenLevel = airInput.getOxygenLevel();
     }
     abstract public double getQuality();
+    void updateHumidity(double x) {
+        this.humidity += x;
+    }
     public boolean getToxicity() {
         double toxicityAQ = 100 * (1 - getQuality() / maxScore);
         return (toxicityAQ > 0.8 * maxScore);
