@@ -3,10 +3,13 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import fileio.CommandInput;
 import fileio.InputLoader;
+import fileio.SimulationInput;
 
 import java.io.File;
 import java.io.IOException;
+
 
 /**
  * The entry point to this homework. It runs the checker that tests your implementation.
@@ -29,6 +32,9 @@ public final class Main {
 
         InputLoader inputLoader = new InputLoader(inputPath);
         ArrayNode output = MAPPER.createArrayNode();
+
+        List<SimulationInput> simulations = loader.getSimulations();
+        List<CommandInput> commands = loader.getCommands();
 
         /*
          * TODO Implement your function here
