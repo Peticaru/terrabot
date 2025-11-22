@@ -31,8 +31,15 @@ public abstract class Air extends Entity {
     void updateHumidity(double x) {
         this.humidity += x;
     }
-    public boolean getToxicity() {
-        double toxicityAQ = 100 * (1 - getQuality() / maxScore);
+    public double getToxicity () {
+        double airQualityScore = getQuality();
+        double toxicityAQ = 100 * (1 - airQualityScore / maxScore);
+        return round(toxicityAQ);
+    }
+    public boolean isToxic() {
+        double airQualityScore = getQuality();
+        double toxicityAQ = 100 * (1 - airQualityScore / maxScore);
+
         return (toxicityAQ > 0.8 * maxScore);
     }
     public String getQualityCategory() {

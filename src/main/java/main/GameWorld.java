@@ -22,6 +22,9 @@ public class GameWorld {
             }
         }
     }
+    public boolean isValidPosition(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
     void setAir (int x, int y, main.Air.Air air) {
         grid[x][y].setAir(air);
     }

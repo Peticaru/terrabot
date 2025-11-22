@@ -52,12 +52,16 @@ public class Plant extends Entity {
     public double getBlockingProbability() {
         return switch (type) {
             case "FloweringPlants" -> 90.0;
-            case "Gymnosperms" -> 60.0;
+            case "GymnospermsPlants" -> 60.0;
             case "Ferns" -> 30.0;
             case "Mosses" -> 40.0;
             case "Algae" -> 20.0;
             default -> 0.0;
         };
+    }
+
+    public double getStuckRisk() {
+        return getBlockingProbability() / 100.0;
     }
 
     private void advanceAge() {
