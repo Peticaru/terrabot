@@ -12,18 +12,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TerraBot {
     private int x, y;
-    private int battery;
-    private boolean charging;
+    private double battery;
+    private int timeUntilCharged;
     private List<Entity> inventory;
     private Map<String, List<String>> knowledgeBase;
 
     public TerraBot(int battery) {
         this.x = 0;
         this.y = 0;
-        this.charging = false;
+        this.timeUntilCharged = -1;
         this.battery = battery;// Starting battery
         this.inventory = new ArrayList<>();
         this.knowledgeBase = new HashMap<>();
+    }
+    public void recharge (int x) {
+        this.battery += x;
     }
 
     // Movement, scanning, learning methods...

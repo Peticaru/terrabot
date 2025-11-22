@@ -17,7 +17,11 @@ public class Simulation {
     }
     private static void handleCommand (CommandInput command, GameWorld gameWorld, TerraBot terrabot, ArrayNode output) {
         String type = command.getCommand();
-        println("Handling command of type: " + type);
+        if (command.getTimestamp() < terrabot.getTimeUntilCharged()) {
+            String recharegeMsg = "ERROR: Robot still charging. Cannot perform action";
+            JSONOutput.stateSimulation(recharegeMsg, command, output);
+            return;
+        }
         switch (type) {
             case "startSimulation":
                 // init flags, maybe reset TerraBot position, etc.
@@ -47,15 +51,24 @@ public class Simulation {
                     JSONOutput.stateSimulation(errorMsg, command, output);
                     break;
                 }
-                if (terrabot.isCharging()) {
-                    String errorMsg = "ERROR: Robot is charging. Cannot perform move.";
+
+                // call MoveRobot.command(...)
+                Commands.MoveRobot.command(command, gameWorld, terrabot, output);
+                break;
+
+            case "rechargeBattery":
+                // use cmd.getTimeToCharge(), tell terrabot to start charging
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
                     JSONOutput.stateSimulation(errorMsg, command, output);
                     break;
                 }
-                break;
+                println(terrabot.getBattery());
+                int timeToCharge = command.getTimeToCharge();
+                terrabot.recharge(timeToCharge);
+                terrabot.setTimeUntilCharged(command.getTimestamp() + timeToCharge);
+                JSONOutput.stateSimulation("Robot battery is charging.", command, output);
 
-            case "recharge":
-                // use cmd.getTimeToCharge(), tell terrabot to start charging
                 break;
 
             case "scanObject":
@@ -71,12 +84,14 @@ public class Simulation {
                 break;
 
             case "getEnergyStatus":
-                // create an ObjectNode, e.g.:
-                // ObjectNode node = Main.MAPPER.createObjectNode();
-                // node.put("command", "getEnergyStatus");
-                // node.put("timestamp", cmd.getTimestamp());
-                // node.put("battery", terrabot.getBattery());
-                // output.add(node);
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                String energy = "TerraBot has %d energy points left.";
+                energy = String.format(energy, Math.round(terrabot.getBattery()));
+                JSONOutput.stateSimulation(energy, command, output);
                 break;
 
             case "printEnvConditions":
@@ -106,7 +121,6 @@ public class Simulation {
         for (CommandInput cmd : command) {
 //            gameWorld.updateEnvironment();
 //            terrabot.update();
-            System.out.println("Processing command at timestamp: " + cmd.getTimestamp());
             handleCommand(cmd, gameWorld, terrabot, output);
         }
     }
