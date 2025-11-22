@@ -1,9 +1,17 @@
 package main.Water;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.WaterInput;
+import lombok.EqualsAndHashCode;
 import main.Entity;
 
-public abstract class Water extends Entity {
+import lombok.Data;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class Water extends Entity {
     protected double salinity;
     protected double pH;
     protected double purity;
@@ -22,6 +30,11 @@ public abstract class Water extends Entity {
         this.pH = water.getPH();
         this.isFrozen = water.isFrozen();
     }
+    public void toJson(ObjectNode node) {
+        node.put("type", this.type);
+        node.put("name", this.name);
+        node.put("mass", this.mass);
+    }
     public double getQuality() {
         double purity_score        = purity / 100;
         double pH_score            = 1 - Math.abs(pH - 7.5) / 7.5;
@@ -35,6 +48,16 @@ public abstract class Water extends Entity {
                 + 0.1 * turbidity_score
                 + 0.15 * contaminant_score
                 + 0.2 * frozen_score) * 100;
+    }
+    public String getQualityCategory() {
+        double quality = getQuality();
+        if (quality >= 70) {
+            return "good";
+        } else if (quality >= 40) {
+            return "moderate";
+        } else {
+            return "poor";
+        }
     }
 
 }
