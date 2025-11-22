@@ -1,12 +1,26 @@
 package main.Soil;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.SoilInput;
 
 public class ForrestSoil extends Soil {
 
-    private double leafLitter;
+    private final double leafLitter;
     public ForrestSoil(SoilInput soilInput) {
         super(soilInput);
         this.leafLitter = soilInput.getLeafLitter();
+    }
+    @Override
+    public void toJson(ObjectNode node) {
+        double soilQuality = getQuality();
+        node.put("type", type);
+        node.put("name", name);
+        node.put("mass", mass);
+        node.put("nitrogen", nitrogen);
+        node.put("waterRetention", waterRetention);
+        node.put("soilpH", soilpH);
+        node.put("organicMatter", organicMatter);
+        node.put("soilQuality", soilQuality);
+        node.put("leafLitter", leafLitter);
     }
 
     @Override

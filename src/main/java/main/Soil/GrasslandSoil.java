@@ -1,11 +1,27 @@
 package main.Soil;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class GrasslandSoil extends Soil {
-    private double rootDensity;
+    private final double rootDensity;
 
     public GrasslandSoil(fileio.SoilInput soilInput) {
         super(soilInput);
         this.rootDensity = soilInput.getRootDensity();
+    }
+
+    @Override
+    public void toJson(ObjectNode node) {
+        double soilQuality = getQuality();
+        node.put("type", type);
+        node.put("name", name);
+        node.put("mass", mass);
+        node.put("nitrogen", nitrogen);
+        node.put("waterRetention", waterRetention);
+        node.put("soilpH", soilpH);
+        node.put("organicMatter", organicMatter);
+        node.put("soilQuality", soilQuality);
+        node.put("rootDensity", rootDensity);
     }
 
     @Override
