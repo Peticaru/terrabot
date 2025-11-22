@@ -34,7 +34,7 @@ abstract public class Soil extends Entity {
         this.organicMatter += x;
     }
     public abstract double getQuality();
-    abstract double calculateProbability();
+    public abstract double calculateProbability();
 
     public String getQualityCategory() {
         double quality = getQuality();
