@@ -1,10 +1,16 @@
 package main.Plant;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.EqualsAndHashCode;
 import main.Entity;
 import fileio.PlantInput;
 
 
+import lombok.Data;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Plant extends Entity {
     public enum Age {
         Young,
@@ -37,17 +43,23 @@ public class Plant extends Entity {
         }
     }
 
-    public double getBlockingProbability() {
-        switch (type) {
-            case "FloweringPlants": return 90.0;
-            case "Gymnosperms": return 60.0;
-            case "Ferns": return 30.0;
-            case "Mosses": return 40.0;
-            case "Algae": return 20.0;
-            default: return 0.0;
-        }
+    public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {
+        node.put("type", this.type);
+        node.put("name", this.name);
+        node.put("mass", this.mass);
     }
-    
+
+    public double getBlockingProbability() {
+        return switch (type) {
+            case "FloweringPlants" -> 90.0;
+            case "Gymnosperms" -> 60.0;
+            case "Ferns" -> 30.0;
+            case "Mosses" -> 40.0;
+            case "Algae" -> 20.0;
+            default -> 0.0;
+        };
+    }
+
     private void advanceAge() {
         if (age == Age.Young) {
             age = Age.Mature;

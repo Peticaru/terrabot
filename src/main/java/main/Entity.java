@@ -1,5 +1,10 @@
 package main;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.Data;
+
+@Data
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class Entity {
     protected String type;
     protected String name;
@@ -9,5 +14,11 @@ public abstract class Entity {
     }
     protected double round(double score) {
         return Math.round(score * 100.0) / 100.0;
+    }
+
+    protected int x, y;
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }
