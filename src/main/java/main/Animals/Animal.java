@@ -46,6 +46,9 @@ public class Animal extends Entity {
             default -> 0.0;
         };
     }
+    public double getAttackRisk() {
+        return (100.0 - getAttackProbability()) / 10.0;
+    }
     public double calculateWaterConsumption(double availableWaterMass) {
         return Math.min(mass * 0.08, availableWaterMass);
     }
