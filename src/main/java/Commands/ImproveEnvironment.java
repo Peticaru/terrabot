@@ -25,7 +25,7 @@ public class ImproveEnvironment {
             JSONOutput.stateSimulation("ERROR: Subject not yet saved. Cannot perform action", command, output);
             return;
         }
-        if (terrabot.findFact(name, fact)) {
+        if (!terrabot.findFact(name, fact)) {
             JSONOutput.stateSimulation("ERROR: Fact not yet saved. Cannot perform action", command, output);
             return;
         }
@@ -34,12 +34,12 @@ public class ImproveEnvironment {
         Air air = currentCell.getAir();
         Soil soil = currentCell.getSoil();
         String message = applyEffect(improvementType, name, air, soil);
-
+        JSONOutput.stateSimulation(message, command, output);
     }
     private static String getFact (String improvementType, String name) {
         return switch (improvementType) {
-           case "increaseHumidity" -> "Method to increase humidity";
-           case "increaseMoisture" -> "Method to increase moisture";
+           case "increaseHumidity" -> "Method to increaseHumidity";
+           case "increaseMoisture" -> "Method to increaseMoisture";
            case "plantVegetation" -> "Method to plant " + name;
            case "fertilizeSoil" -> "Method to fertilize soil with " + name;
            default -> "";

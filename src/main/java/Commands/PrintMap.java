@@ -27,7 +27,6 @@ public class PrintMap {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 Cell cell = gameWorld.getCell(x, y);
-                println("Processing cell (" + x + ", " + y + ")");
 
                 // One entry per section
                 var cellNode = outArray.addObject();

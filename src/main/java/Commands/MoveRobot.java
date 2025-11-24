@@ -48,7 +48,7 @@ public class MoveRobot {
                 }
             }
         }
-        println("Best move to (" + bestX + ", " + bestY + ") with risk " + minRisk);
+        println("Best move to (" + bestX + ", " + bestY + ") with risk " + minRisk + " " + terrabot.getBattery());
         if (bestX != -1 && bestY != -1) {
             if (terrabot.getBattery() >= minRisk) {
                 terrabot.setX(bestX);

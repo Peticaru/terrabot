@@ -110,8 +110,13 @@ public class Simulation {
                 }
                 Commands.PrintKnowledge.command(command, gameWorld, terrabot, output);
                 break;
-            case "improveEnvConditions":
-                // use improvementType, call something on gameWorld + robot
+            case "improveEnvironment":
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                Commands.ImproveEnvironment.command(command, gameWorld, terrabot, output);
                 break;
 
             case "getEnergyStatus":
@@ -149,10 +154,15 @@ public class Simulation {
         }
     }
     public static void startSimulation(List<CommandInput> command, GameWorld gameWorld, TerraBot terrabot, ArrayNode output) {
+        int lastTime = 0;
         for (CommandInput cmd : command) {
-           gameWorld.setCurrentTime(cmd.getTimestamp());
-           gameWorld.updateScanned();
+            for (int t = lastTime + 1; t <= cmd.getTimestamp(); t++) {
+                gameWorld.setCurrentTime(t);
+                gameWorld.updateScanned();
+            }
+            lastTime = cmd.getTimestamp();
            handleCommand(cmd, gameWorld, terrabot, output);
+           gameWorld.printSimpleGrid();
         }
     }
 }

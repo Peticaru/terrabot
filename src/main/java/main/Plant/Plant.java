@@ -55,9 +55,8 @@ public class Plant extends Entity {
         if (water != null) {
             grow(0.2);
         }
-        double oxygenLevel = air.getOxygenLevel() + this.getOxygenProduction();
-        oxygenLevel = round(oxygenLevel);
-        air.setOxygenLevel(oxygenLevel);
+        if (age != Age.Dead)
+            air.updateOxygenLevel(this.getOxygenProduction());
     }
 
     public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {

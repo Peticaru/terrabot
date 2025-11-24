@@ -199,7 +199,7 @@ public class GameWorld {
                 if (animal != null && animal.isScanned()) {
                     int time = this.currentTime - animal.getScanTime();
                     animal.updateState(air.isToxic());
-                    if (time > 0 && time % 2 == 0) {
+                    if (time == 2) {
                         Cell nextCell = getNextCellForAnimal(x, y);
                         if (animal.isCarnivoreOrParasite() && nextCell.getAnimal() != null) {
                             animal.setMass(animal.getMass() + nextCell.getAnimal().getMass());
@@ -210,10 +210,12 @@ public class GameWorld {
                         else {
                             animal.updateAnimal(nextCell);
                         }
+                        animal.setScanTime(currentTime);
                         animal.setX(nextCell.getX());
                         animal.setY(nextCell.getY());
                         nextCell.setAnimal(animal);
                         cell.setAnimal(null);
+
                     }
                     else {
                         animal.updateAnimal(cell);
