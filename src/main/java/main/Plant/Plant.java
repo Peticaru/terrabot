@@ -5,6 +5,10 @@ import lombok.EqualsAndHashCode;
 import main.Entity;
 import fileio.PlantInput;
 
+import main.Soil.Soil;
+import main.Water.Water;
+import main.Air.Air;
+
 
 import lombok.Data;
 
@@ -15,10 +19,11 @@ public class Plant extends Entity {
     public enum Age {
         Young,
         Mature,
-        Old
+        Old,
+        Dead
     }
     protected Age age;
-    protected static final double []maturity_oxygen_rate = {0.2, 0.7, 0.4};
+    protected static final double []maturity_oxygen_rate = {0.2, 0.7, 0.4, 0.0};
     protected double growthRate = 0;
     protected double oxygen_from_plant = 0.0;
     public Plant(PlantInput plantInput) {
@@ -41,6 +46,18 @@ public class Plant extends Entity {
                 oxygen_from_plant = 0.0;
             }
         }
+    }
+
+    public void updatePlant(Soil soil, Water water, Air air) {
+        if (!scanned)
+            return;
+        grow(0.2);
+        if (water != null) {
+            grow(0.2);
+        }
+        double oxygenLevel = air.getOxygenLevel() + this.getOxygenProduction();
+        oxygenLevel = round(oxygenLevel);
+        air.setOxygenLevel(oxygenLevel);
     }
 
     public void toJson(com.fasterxml.jackson.databind.node.ObjectNode node) {
@@ -69,6 +86,8 @@ public class Plant extends Entity {
             age = Age.Mature;
         } else if (age == Age.Mature) {
             age = Age.Old;
+        } else if (age == Age.Old) {
+            age = Age.Dead;
         }
     }
 

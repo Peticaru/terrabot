@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import fileio.CommandInput;
 
 import java.util.List;
+import java.util.Map;
+
 import Commands.JSONOutput;
 
 import static java.lang.IO.println;
@@ -15,6 +17,9 @@ public class Simulation {
     Simulation() {
         running = false;
     }
+
+
+
     private static void handleCommand (CommandInput command, GameWorld gameWorld, TerraBot terrabot, ArrayNode output) {
         String type = command.getCommand();
         if (command.getTimestamp() < terrabot.getTimeUntilCharged()) {
@@ -70,15 +75,41 @@ public class Simulation {
                 JSONOutput.stateSimulation("Robot battery is charging.", command, output);
 
                 break;
-
+            case "changeWeatherConditions":
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                // call ChangeWeather.command(...)
+                Commands.ChangeWeather.command(command, gameWorld, terrabot, output);
+                break;
             case "scanObject":
                 // let TerraBot scan current cell, store entities or facts
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                Commands.Scan.command(command, gameWorld, terrabot, output);
                 break;
 
             case "learnFact":
-                // parse cmd.getSubject(), cmd.getComponents(), add fact to robot
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                Commands.LearnFact.command(command, gameWorld, terrabot, output);
                 break;
-
+            case "printKnowledgeBase":
+                if (!running) {
+                    String errorMsg = "ERROR: Simulation not started. Cannot perform action";
+                    JSONOutput.stateSimulation(errorMsg, command, output);
+                    break;
+                }
+                Commands.PrintKnowledge.command(command, gameWorld, terrabot, output);
+                break;
             case "improveEnvConditions":
                 // use improvementType, call something on gameWorld + robot
                 break;
@@ -119,9 +150,9 @@ public class Simulation {
     }
     public static void startSimulation(List<CommandInput> command, GameWorld gameWorld, TerraBot terrabot, ArrayNode output) {
         for (CommandInput cmd : command) {
-//            gameWorld.updateEnvironment();
-//            terrabot.update();
-            handleCommand(cmd, gameWorld, terrabot, output);
+           gameWorld.setCurrentTime(cmd.getTimestamp());
+           gameWorld.updateScanned();
+           handleCommand(cmd, gameWorld, terrabot, output);
         }
     }
 }

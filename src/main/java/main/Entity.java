@@ -9,6 +9,8 @@ public abstract class Entity {
     protected String type;
     protected String name;
     protected double mass;
+    protected boolean scanned = false;
+    protected int scanTime = 0;
     protected double norm(double score) {
         return Math.max(0, Math.min(100, score));
     }

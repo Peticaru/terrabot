@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.WaterInput;
 import lombok.EqualsAndHashCode;
+import main.Air.Air;
 import main.Entity;
 
 import lombok.Data;
+import main.Soil.Soil;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -29,6 +31,12 @@ public class Water extends Entity {
         this.contaminantIndex = water.getContaminantIndex();
         this.pH = water.getPH();
         this.isFrozen = water.isFrozen();
+    }
+    public void updateWater(Soil soil, Air air) {
+        if (!scanned)
+            return;
+        soil.updateWaterRetention(0.1);
+        air.updateHumidity(0.1);
     }
     public void toJson(ObjectNode node) {
         node.put("type", this.type);

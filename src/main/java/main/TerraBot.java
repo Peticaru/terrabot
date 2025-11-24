@@ -1,8 +1,6 @@
 package main;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +13,7 @@ public class TerraBot {
     private double battery;
     private int timeUntilCharged;
     private List<Entity> inventory;
-    private Map<String, List<String>> knowledgeBase;
+    private LinkedHashMap<String, List<String>> knowledgeBase;
 
     public TerraBot(int battery) {
         this.x = 0;
@@ -23,8 +21,33 @@ public class TerraBot {
         this.timeUntilCharged = -1;
         this.battery = battery;// Starting battery
         this.inventory = new ArrayList<>();
-        this.knowledgeBase = new HashMap<>();
+        this.knowledgeBase = new LinkedHashMap<>();
     }
+
+    public boolean findSubject(String name) {
+        for (Entity entity : this.inventory) {
+            if (entity.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean findFact(String category, String fact) {
+        if (!this.knowledgeBase.containsKey(category)) {
+            return false;
+        }
+        return this.knowledgeBase.get(category).contains(fact);
+    }
+
+    public void addInventory(Entity entity) {
+        this.inventory.add(entity);
+    }
+    public void addFact(String category, String fact) {
+        this.knowledgeBase.putIfAbsent(category, new ArrayList<>());
+        this.knowledgeBase.get(category).add(fact);
+    }
+
     public void recharge (int x) {
         this.battery += x;
     }

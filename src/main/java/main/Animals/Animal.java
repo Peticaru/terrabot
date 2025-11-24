@@ -3,6 +3,7 @@ package main.Animals;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import fileio.AnimalInput;
 import lombok.EqualsAndHashCode;
+import main.Cell;
 import main.Entity;
 
 import java.util.Locale;
@@ -27,6 +28,62 @@ public class Animal extends Entity {
         node.put("type", this.type);
         node.put("name", this.name);
         node.put("mass", this.mass);
+    }
+
+    private void eatPlant(Cell cell) {
+        main.Plant.Plant plant = cell.getPlant();
+        if (plant != null && plant.isScanned()) {
+            // Simulate eating the plant
+            double newMass = round(this.mass + plant.getMass());
+            this.mass = newMass;
+            cell.setPlant(null);
+        }
+    }
+    private void drinkWater(Cell cell) {
+        main.Water.Water water = cell.getWater();
+        if (water != null && water.isScanned()) {
+            double waterConsumed = calculateWaterConsumption(water.getMass());
+            this.mass = round(this.mass + waterConsumed);
+            double remainingWaterMass = round(water.getMass() - waterConsumed);
+            if (remainingWaterMass <= 0) {
+                cell.setWater(null);
+            } else {
+                water.setMass(remainingWaterMass);
+            }
+        }
+    }
+
+    public void updateAnimal (Cell newCell) {
+        if (!scanned)
+            return;
+        main.Water.Water water = newCell.getWater();
+        main.Plant.Plant plant = newCell.getPlant();
+        main.Soil.Soil soil = newCell.getSoil();
+        boolean fed = false;
+        double organicMatter = 0.0;
+        if (plant != null && water != null && plant.isScanned() && water.isScanned()) {
+            eatPlant(newCell);
+            drinkWater(newCell);
+            fed = true;
+            organicMatter = 0.8;
+        }
+        else if (plant != null && plant.isScanned()) {
+            eatPlant(newCell);
+            fed = true;
+            organicMatter = 0.5;
+        }
+        else if (water != null && water.isScanned()) {
+            drinkWater(newCell);
+            fed = true;
+            organicMatter = 0.5;
+        }
+        if (fed) {
+            feed();
+        } else {
+            makeHungry();
+        }
+        if (organicMatter > 0 && soil != null)
+            soil.updateOrganicMatter(organicMatter);
     }
 
     public Animal (AnimalInput animalInput) {

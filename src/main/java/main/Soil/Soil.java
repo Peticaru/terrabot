@@ -29,9 +29,11 @@ abstract public class Soil extends Entity {
     }
     public void updateWaterRetention(double x) {
         this.waterRetention += x;
+        this.waterRetention = round(this.waterRetention);
     }
     public void updateOrganicMatter(double x) {
         this.organicMatter += x;
+        this.organicMatter = round(this.organicMatter);
     }
     public abstract double getQuality();
     public abstract double calculateProbability();
