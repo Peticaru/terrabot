@@ -16,6 +16,7 @@ public abstract class Air extends Entity {
     protected double temperature;
     protected double oxygenLevel;
     protected final double maxScore;
+    protected boolean weatherAffected;
     public Air(AirInput airInput, double maxScore) {
         super();
         this.maxScore = maxScore;
@@ -25,16 +26,23 @@ public abstract class Air extends Entity {
         this.humidity = airInput.getHumidity();
         this.temperature = airInput.getTemperature();
         this.oxygenLevel = airInput.getOxygenLevel();
+        this.weatherAffected = false;
     }
     public abstract void toJson(ObjectNode node);
     abstract public double getQuality();
-    void updateHumidity(double x) {
+    public void updateHumidity(double x) {
         this.humidity += x;
+        this.humidity = round(this.humidity);
+    }
+    public void updateOxygenLevel(double x) {
+        this.oxygenLevel += x;
+        this.oxygenLevel = round(this.oxygenLevel);
     }
     public double getToxicity () {
         double airQualityScore = getQuality();
         double toxicityAQ = 100 * (1 - airQualityScore / maxScore);
-        return round(toxicityAQ);
+        double finalResult = Math.round(toxicityAQ * 100.0) / 100.0;
+        return round(norm(finalResult));
     }
     public boolean isToxic() {
         double airQualityScore = getQuality();

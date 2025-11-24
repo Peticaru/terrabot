@@ -1,6 +1,7 @@
 package main.Air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.WeatherConditions;
 
 public class MountainAir extends Air {
     protected double altitude;
@@ -23,6 +24,10 @@ public class MountainAir extends Air {
     @Override
     public double getQuality() {
         double oxygenFactor = oxygenLevel - (altitude/1000*0.5);
-        return round(norm((oxygenFactor*2) + (humidity*0.6)));
+        double score = (oxygenFactor*2) + (humidity*0.6);
+        if (weatherAffected) {
+            score -= WeatherConditions.numberOfHikers * 0.1;
+        }
+        return round(norm(score));
     }
 }

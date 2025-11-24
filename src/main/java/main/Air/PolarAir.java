@@ -1,6 +1,7 @@
 package main.Air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.WeatherConditions;
 
 public class PolarAir extends Air {
     protected double iceCrystalConcentration;
@@ -24,6 +25,9 @@ public class PolarAir extends Air {
     @Override
     public double getQuality() {
         double score = (oxygenLevel*2) + (100-Math.abs(temperature)) - (iceCrystalConcentration*0.05);
+        if (weatherAffected) {
+            score -= WeatherConditions.windSpeed * 0.2;
+        }
         return round(norm(score));
     }
 

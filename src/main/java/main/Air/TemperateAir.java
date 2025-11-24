@@ -1,6 +1,7 @@
 package main.Air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.WeatherConditions;
 
 public class TemperateAir extends Air {
     protected double pollenLevel;
@@ -24,6 +25,13 @@ public class TemperateAir extends Air {
     @Override
     public double getQuality() {
         double score = (oxygenLevel*2) + (humidity*0.7) - (pollenLevel*0.1);
+        double seasonPenalty = 0.0;
+        if (WeatherConditions.Season != null)
+            if (WeatherConditions.Season.equalsIgnoreCase("spring"))
+                seasonPenalty = 15.0;
+        if (weatherAffected) {
+            score -= seasonPenalty;
+        }
         return round(norm(score));
     }
 

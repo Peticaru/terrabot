@@ -1,6 +1,7 @@
 package main.Air;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import main.WeatherConditions;
 
 public class TropicalAir extends Air {
     protected double co2Level;
@@ -23,6 +24,9 @@ public class TropicalAir extends Air {
     @Override
     public double getQuality() {
         double score = (oxygenLevel * 2) + (humidity * 0.5) - (co2Level * 0.01);
+        if (weatherAffected) {
+            score += WeatherConditions.rainfall * 0.3;
+        }
         return round(norm(score));
     }
 }
